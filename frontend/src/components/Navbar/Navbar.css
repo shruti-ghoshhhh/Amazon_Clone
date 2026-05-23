@@ -394,22 +394,45 @@
   text-decoration: underline;
 }
 
-/* ── Prime Brand logo overlay ──────────────────────────────── */
 .logo-container {
   display: flex;
   flex-direction: column;
   position: relative;
+  align-items: flex-start;
+  justify-content: center;
 }
 
-.logo-prime {
-  font-size: 10px;
+.logo-main {
+  display: flex;
+  align-items: flex-end;
+  position: relative;
+}
+
+.amazon-logo-svg {
+  height: 20px;
+  width: auto;
+  color: white; /* sets fill to white for wordmark paths */
+}
+
+.logo-in-suffix {
+  font-size: 9px;
+  color: #ccc;
+  font-weight: 600;
+  margin-left: 2px;
+  margin-bottom: 5px;
+  align-self: flex-end;
+  line-height: 1;
+}
+
+.logo-prime-badge {
+  font-size: 9px;
   font-style: italic;
   color: #00A8E0;
   font-weight: 800;
-  margin-top: -6px;
-  margin-left: 20px;
+  margin-top: -2px;
+  margin-left: 36px; /* perfectly aligned right under the smile arrow end */
   text-transform: lowercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.3px;
   line-height: 1;
 }
 

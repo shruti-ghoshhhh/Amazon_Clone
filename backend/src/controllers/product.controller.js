@@ -35,6 +35,17 @@ export const getProducts = catchAsync(async (req, res) => {
   // ── Build WHERE clause dynamically ──────────────────────────────────────────
   const where = { is_active: true }; // Never return inactive products
 
+  if (category) {
+    const categoryObj = await Category.findOne({ where: { slug: category } });
+    if (categoryObj) {
+      const subcats = await Category.findAll({ where: { parent_id: categoryObj.id } });
+      const categoryIds = [categoryObj.id, ...subcats.map(s => s.id)];
+      where.category_id = { [Op.in]: categoryIds };
+    } else {
+      where.category_id = null; // category not found, return empty results
+    }
+  }
+
   if (search) {
     // Op.like: SQL LIKE '%term%' — matches name containing the search term
     // We use Op.like (not iLike) because MySQL is case-insensitive by default
@@ -79,14 +90,12 @@ export const getProducts = catchAsync(async (req, res) => {
   };
   const order = orderMap[sort] || orderMap.newest;
 
-  // ── Build category include (filter by slug if provided) ──────────────────────
+  // ── Build category include ──────────────────────────────────────────────────
   // We always INCLUDE category so the response has category name + slug.
-  // When filtering, we add a WHERE on the Category model.
   const categoryInclude = {
     model:    Category,
     as:       'category',
     attributes: ['id', 'name', 'slug'], // Only return these fields, not all columns
-    ...(category && { where: { slug: category } }), // Conditional WHERE on join
   };
 
   // ── Pagination ───────────────────────────────────────────────────────────────

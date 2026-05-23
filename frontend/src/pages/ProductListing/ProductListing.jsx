@@ -226,7 +226,20 @@ export default function ProductListing() {
   const hasFilters = search || category || minRating || primeOnly || delivDay;
 
   // ── Active category label ──────────────────────────────────
-  const currentCategory = categories.find(c => c.slug === category);
+  let currentCategory = null;
+  let parentCategory = null;
+  for (const parent of categories) {
+    if (parent.slug === category) {
+      currentCategory = parent;
+      break;
+    }
+    const sub = parent.subcategories?.find(s => s.slug === category);
+    if (sub) {
+      currentCategory = sub;
+      parentCategory = parent;
+      break;
+    }
+  }
 
   return (
     <div className="pl-page-bg">
@@ -263,26 +276,83 @@ export default function ProductListing() {
           {/* ── Department section ──────────────────────────── */}
           <div className="pl-sidebar-section">
             <h3 className="pl-sidebar-h3">Department</h3>
-            <a
-              className={`pl-dept-link ${!category ? 'active' : ''}`}
-              href="#"
-              onClick={e => { e.preventDefault(); handleCategory(''); }}
-              aria-current={!category ? 'page' : undefined}
-            >
-              All Departments
-            </a>
-            {categories.map(cat => (
-              <a
-                key={cat.id}
-                className={`pl-dept-link ${category === cat.slug ? 'active' : ''}`}
-                href="#"
-                onClick={e => { e.preventDefault(); handleCategory(cat.slug); }}
-                aria-current={category === cat.slug ? 'page' : undefined}
-              >
-                {category === cat.slug && <span className="pl-dept-bullet">▸ </span>}
-                {cat.name}
-              </a>
-            ))}
+            {category && currentCategory ? (
+              <>
+                <a
+                  className="pl-dept-link pl-dept-up"
+                  href="#"
+                  onClick={e => { e.preventDefault(); handleCategory(''); }}
+                >
+                  ‹ All Departments
+                </a>
+
+                {parentCategory ? (
+                  <>
+                    <a
+                      className="pl-dept-link pl-dept-up"
+                      style={{ paddingLeft: '10px' }}
+                      href="#"
+                      onClick={e => { e.preventDefault(); handleCategory(parentCategory.slug); }}
+                    >
+                      ‹ {parentCategory.name}
+                    </a>
+
+                    {parentCategory.subcategories?.map(sub => (
+                      <a
+                        key={sub.id}
+                        className={`pl-dept-link ${category === sub.slug ? 'active' : ''}`}
+                        style={{ paddingLeft: '20px' }}
+                        href="#"
+                        onClick={e => { e.preventDefault(); handleCategory(sub.slug); }}
+                        aria-current={category === sub.slug ? 'page' : undefined}
+                      >
+                        {category === sub.slug && <span className="pl-dept-bullet">▸ </span>}
+                        {sub.name}
+                      </a>
+                    ))}
+                  </>
+                ) : (
+                  <>
+                    <span className="pl-dept-link active" style={{ fontWeight: 'bold', paddingLeft: '10px' }}>
+                      {currentCategory.name}
+                    </span>
+
+                    {currentCategory.subcategories?.map(sub => (
+                      <a
+                        key={sub.id}
+                        className="pl-dept-link"
+                        style={{ paddingLeft: '20px' }}
+                        href="#"
+                        onClick={e => { e.preventDefault(); handleCategory(sub.slug); }}
+                      >
+                        {sub.name}
+                      </a>
+                    ))}
+                  </>
+                )}
+              </>
+            ) : (
+              <>
+                <a
+                  className={`pl-dept-link ${!category ? 'active' : ''}`}
+                  href="#"
+                  onClick={e => { e.preventDefault(); handleCategory(''); }}
+                >
+                  All Departments
+                </a>
+                {categories.map(cat => (
+                  <a
+                    key={cat.id}
+                    className={`pl-dept-link ${category === cat.slug ? 'active' : ''}`}
+                    style={{ paddingLeft: '10px' }}
+                    href="#"
+                    onClick={e => { e.preventDefault(); handleCategory(cat.slug); }}
+                  >
+                    {cat.name}
+                  </a>
+                ))}
+              </>
+            )}
           </div>
 
           {/* ── Amazon Prime filter ─────────────────────────── */}
@@ -434,11 +504,19 @@ export default function ProductListing() {
           <div className="pl-results-header-block">
             {currentCategory && (
               <div className="pl-breadcrumb-bar">
-                <Link to="/products" className="pl-bc-link">Sports & Outdoors</Link>
-                {currentCategory && (
-                  <><span className="pl-bc-sep"> › </span>
-                  <span className="pl-bc-current">{currentCategory.name} ✕</span></>
+                <Link to="/products" onClick={() => handleCategory('')} className="pl-bc-link">
+                  All Departments
+                </Link>
+                {parentCategory && (
+                  <>
+                    <span className="pl-bc-sep"> › </span>
+                    <Link to={`/products?category=${parentCategory.slug}`} onClick={() => handleCategory(parentCategory.slug)} className="pl-bc-link">
+                      {parentCategory.name}
+                    </Link>
+                  </>
                 )}
+                <span className="pl-bc-sep"> › </span>
+                <span className="pl-bc-current">{currentCategory.name}</span>
               </div>
             )}
             <h1 className="pl-results-heading">Results</h1>

@@ -25,6 +25,7 @@ const ProductListing   = lazy(() => import('./pages/ProductListing/ProductListin
 const ProductDetail    = lazy(() => import('./pages/ProductDetail/ProductDetail.jsx'));
 const Cart             = lazy(() => import('./pages/Cart/Cart.jsx'));
 const Checkout         = lazy(() => import('./pages/Checkout/Checkout.jsx'));
+const NeedAnythingElse = lazy(() => import('./pages/NeedAnythingElse/NeedAnythingElse.jsx'));
 const OrderConfirmation= lazy(() => import('./pages/OrderConfirmation/OrderConfirmation.jsx'));
 const OrderHistory     = lazy(() => import('./pages/OrderHistory/OrderHistory.jsx'));
 const Wishlist         = lazy(() => import('./pages/Wishlist/Wishlist.jsx'));
@@ -76,6 +77,11 @@ function App() {
                 <Route path="/checkout"             element={
                   <ProtectedRoute>
                     <Checkout />
+                  </ProtectedRoute>
+                } />
+                <Route path="/need-anything-else"   element={
+                  <ProtectedRoute>
+                    <NeedAnythingElse />
                   </ProtectedRoute>
                 } />
                 <Route path="/order-confirmation/:orderId" element={

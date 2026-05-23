@@ -94,7 +94,7 @@
 
   /* Layout */
   --max-width: 1500px;
-  --navbar-height: 60px;
+  --navbar-height: 98px; /* 60px primary + 38px secondary navbar */
 }
 
 /* ── 3. CSS RESET ──────────────────────────────────────────── */

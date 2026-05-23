@@ -154,9 +154,7 @@ export default function Wishlist() {
               <span className="list-nav-badge">{wishlistItems.length}</span>
             </button>
           </div>
-          <button className="create-list-btn" onClick={() => alert('Multiple lists is a premium feature.')}>
-            Create a List
-          </button>
+
         </aside>
 
         {/* ── Main Content: List Details ──────────────────────── */}

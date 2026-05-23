@@ -80,6 +80,42 @@ app.use(express.json());
 // Invaluable for debugging during development
 app.use(morgan('dev'));
 
+// ─── Welcoming API root endpoints ──────────────────────────────────────────────
+app.get('/', (req, res) => {
+  res.json({
+    message: 'Welcome to the Amazon Clone High-Fidelity API Server!',
+    status: 'online',
+    health: '/api/health',
+    endpoints: {
+      products: '/api/products',
+      categories: '/api/categories',
+      cart: '/api/cart',
+      orders: '/api/orders',
+      wishlist: '/api/wishlist'
+    }
+  });
+});
+
+app.get('/api', (req, res) => {
+  res.json({
+    message: 'Amazon Clone API Gateway',
+    status: 'active',
+    health: '/api/health',
+    version: '1.0.0'
+  });
+});
+
+app.get('/api/', (req, res) => {
+  res.json({
+    message: 'Amazon Clone API Gateway',
+    status: 'active',
+    health: '/api/health',
+    version: '1.0.0'
+  });
+});
+
+app.get('/favicon.ico', (req, res) => res.status(204).end());
+
 // ─── Health Check ──────────────────────────────────────────────────────────────
 // Simple endpoint Railway uses to verify the server is alive
 app.get('/api/health', (req, res) => {

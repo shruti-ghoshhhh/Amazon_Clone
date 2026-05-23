@@ -1,71 +1,14 @@
-// seed.js — Database seeder
-//
-// Run this ONCE after connecting to Railway MySQL:
-//   node src/seeders/seed.js
-//
-// It will:
-//   1. Drop & recreate all tables (force: true)
-//   2. Insert parent categories → subcategories
-//   3. Insert 50+ products with real image URLs
-//   4. Insert a default test user (test@amazon.com / password123)
-//   5. Insert sample addresses + orders for that user
-//
-// WHY FORCE SYNC?
-// { force: true } drops all tables and recreates them cleanly.
-// Only safe to use in seeding — NEVER in production startup.
-// We use it here so you can re-run the seeder anytime to reset data.
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
-import bcrypt from 'bcryptjs';
-import sequelize from '../config/database.js';
-import {
-  User, Category, Product, ProductImage,
-  Address, Order, OrderItem
-} from '../models/index.js';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-// ─── Helpers ───────────────────────────────────────────────────────────────────
+const seedPath = path.join(__dirname, 'seed.js');
+let seedContent = fs.readFileSync(seedPath, 'utf8');
 
-// slugify: "Home & Kitchen" → "home-kitchen"
-const slugify = (str) =>
-  str.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
-
-// ─── CATEGORIES ───────────────────────────────────────────────────────────────
-
-const parentCategories = [
-  { name: 'Electronics', slug: 'electronics' },
-  { name: 'Clothing', slug: 'clothing' },
-  { name: 'Books', slug: 'books' },
-  { name: 'Home & Kitchen', slug: 'home-kitchen' },
-  { name: 'Sports & Outdoors', slug: 'sports-outdoors' },
-  { name: 'Toys & Games', slug: 'toys-games' },
-  { name: 'Beauty & Personal Care', slug: 'beauty' },
-  { name: 'Grocery', slug: 'grocery' },
-  { name: 'Automotive', slug: 'automotive' },
-  { name: 'Garden', slug: 'garden' },
-];
-
-// Subcategories are defined with a parentSlug reference
-const subCategories = [
-  // Electronics
-  { name: 'Smartphones', slug: 'smartphones', parentSlug: 'electronics' },
-  { name: 'Laptops', slug: 'laptops', parentSlug: 'electronics' },
-  { name: 'Headphones', slug: 'headphones', parentSlug: 'electronics' },
-  { name: 'Cameras', slug: 'cameras', parentSlug: 'electronics' },
-  // Clothing
-  { name: "Men's", slug: 'mens-clothing', parentSlug: 'clothing' },
-  { name: "Women's", slug: 'womens-clothing', parentSlug: 'clothing' },
-  // Books
-  { name: 'Fiction', slug: 'fiction', parentSlug: 'books' },
-  { name: 'Non-Fiction', slug: 'non-fiction', parentSlug: 'books' },
-  // Home
-  { name: 'Cookware', slug: 'cookware', parentSlug: 'home-kitchen' },
-  { name: 'Furniture', slug: 'furniture', parentSlug: 'home-kitchen' },
-];
-
-// ─── PRODUCTS ─────────────────────────────────────────────────────────────────
-// Each product references its category by slug (resolved to UUID below)
-// Images are real Unsplash URLs — stable and freely accessible
-
-const productData = [
+const newProductData = `const productData = [
   // ── SMARTPHONES ─────────────────────────────────────────────────────────────
   {
     categorySlug: 'smartphones',
@@ -221,7 +164,7 @@ const productData = [
   },
   {
     categorySlug: 'mens-clothing',
-    name: 'Nike Men\'s Dri-FIT Running T-Shirt — Black',
+    name: 'Nike Men\\'s Dri-FIT Running T-Shirt — Black',
     description: 'Sweat-wicking fabric helps keep you dry and comfortable during your run.',
     price: 1495.00,
     stock_qty: 300,
@@ -308,67 +251,6 @@ const productData = [
     images: [
       { url: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=800&q=80', is_primary: true, display_order: 1 },
     ],
-  },
-
-  {
-    categorySlug: 'mens-clothing',
-    name: 'Puma Men\'s Solid Round Neck T-Shirt',
-    description: 'Comfortable, stylish, and durable cotton tee for everyday wear.',
-    price: 699.00,
-    stock_qty: 150,
-    rating: 4.20,
-    review_count: 1205,
-    images: [{ url: 'https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=800&q=80', is_primary: true, display_order: 1 }],
-  },
-  {
-    categorySlug: 'womens-clothing',
-    name: 'Biba Women\'s Straight Kurta — Blue',
-    description: 'Elegant embroidered straight kurta perfect for festive occasions.',
-    price: 1299.00,
-    stock_qty: 80,
-    rating: 4.50,
-    review_count: 540,
-    images: [{ url: 'https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=800&q=80', is_primary: true, display_order: 1 }],
-  },
-  {
-    categorySlug: 'fiction',
-    name: 'The Alchemist — Paulo Coelho',
-    description: 'A magical fable about learning to listen to your heart.',
-    price: 250.00,
-    stock_qty: 300,
-    rating: 4.70,
-    review_count: 56300,
-    images: [{ url: 'https://images.unsplash.com/photo-1589829085413-56de8ae18c73?w=800&q=80', is_primary: true, display_order: 1 }],
-  },
-  {
-    categorySlug: 'non-fiction',
-    name: 'Sapiens: A Brief History of Humankind — Yuval Noah Harari',
-    description: 'Explores how biology and history have defined us and enhanced our understanding of what it means to be "human".',
-    price: 450.00,
-    stock_qty: 210,
-    rating: 4.80,
-    review_count: 24500,
-    images: [{ url: 'https://images.unsplash.com/photo-1589998059171-988d887df646?w=800&q=80', is_primary: true, display_order: 1 }],
-  },
-  {
-    categorySlug: 'cookware',
-    name: 'Pigeon by Stovekraft Basics Aluminium Non-Stick Set (3 Pieces)',
-    description: 'High quality non-stick cookware set including fry pan, kadai, and flat tawa.',
-    price: 1499.00,
-    stock_qty: 120,
-    rating: 4.10,
-    review_count: 8500,
-    images: [{ url: 'https://images.unsplash.com/photo-1584269600464-37b1b58a9fe7?w=800&q=80', is_primary: true, display_order: 1 }],
-  },
-  {
-    categorySlug: 'furniture',
-    name: 'Wakefit Orthopedic Memory Foam Mattress (Queen Size)',
-    description: 'Medium firm orthopedic mattress designed for pressure relief and spinal alignment.',
-    price: 12500.00,
-    stock_qty: 25,
-    rating: 4.60,
-    review_count: 14000,
-    images: [{ url: 'https://images.unsplash.com/photo-1505693314120-0d443867891c?w=800&q=80', is_primary: true, display_order: 1 }],
   },
 
   // ── SPORTS & OUTDOORS ───────────────────────────────────────────────────────
@@ -504,151 +386,15 @@ const productData = [
       { url: 'https://images.unsplash.com/photo-1512446816042-444d641267d4?w=800&q=80', is_primary: true, display_order: 1 },
     ],
   },
-];
+];`;
 
-// ─── MAIN SEED FUNCTION ────────────────────────────────────────────────────────
+const startIndex = seedContent.indexOf('const productData = [');
+const endIndex = seedContent.indexOf('];\n\n// ─── MAIN SEED FUNCTION ────────────────────────────────────────────────────────');
 
-const seed = async () => {
-  try {
-    console.log('🌱 Starting database seed...\n');
-
-    // Step 1: Force sync — drops all tables and recreates them
-    // WARNING: This destroys all existing data. Only use for seeding.
-    await sequelize.sync({ force: true });
-    console.log('✅ Tables recreated.\n');
-
-    // Step 2: Insert parent categories
-    console.log('📂 Seeding parent categories...');
-    const createdParents = await Category.bulkCreate(parentCategories);
-    // Build a slug → model map for easy lookup
-    const categoryMap = {};
-    createdParents.forEach(c => { categoryMap[c.slug] = c; });
-    console.log(`   ✅ ${createdParents.length} parent categories created.\n`);
-
-    // Step 3: Insert subcategories (resolve parent_id from slug)
-    console.log('📁 Seeding subcategories...');
-    const subCategoryData = subCategories.map(sub => ({
-      name: sub.name,
-      slug: sub.slug,
-      parent_id: categoryMap[sub.parentSlug]?.id ?? null,
-    }));
-    const createdSubs = await Category.bulkCreate(subCategoryData);
-    createdSubs.forEach(c => { categoryMap[c.slug] = c; });
-    console.log(`   ✅ ${createdSubs.length} subcategories created.\n`);
-
-    // Step 4: Insert products + their images
-    console.log('📦 Seeding products and images...');
-    let productCount = 0;
-    let imageCount = 0;
-
-    for (const p of productData) {
-      const category = categoryMap[p.categorySlug];
-      if (!category) {
-        console.warn(`   ⚠️  Category not found for slug: ${p.categorySlug}`);
-        continue;
-      }
-
-      // Assign is_prime and delivery_days dynamically
-      // 0: today, 1: tomorrow, 2: 2 days, 3: standard.
-      // Make standard delivery (3 days) non-prime, others prime.
-      const deliveryDays = productCount % 4;
-      const isPrime = deliveryDays !== 3;
-
-      const product = await Product.create({
-        category_id: category.id,
-        name: p.name,
-        description: p.description,
-        price: p.price,
-        stock_qty: p.stock_qty,
-        rating: p.rating,
-        review_count: p.review_count,
-        is_prime: isPrime,
-        delivery_days: deliveryDays,
-        is_active: true,
-      });
-
-      // Insert all images for this product
-      const imageData = p.images.map(img => ({
-        product_id: product.id,
-        url: img.url,
-        is_primary: img.is_primary,
-        display_order: img.display_order,
-      }));
-      await ProductImage.bulkCreate(imageData);
-
-      productCount++;
-      imageCount += imageData.length;
-    }
-    console.log(`   ✅ ${productCount} products created.`);
-    console.log(`   ✅ ${imageCount} product images created.\n`);
-
-    // Step 5: Create default test user
-    console.log('👤 Creating test user...');
-    // bcrypt.hash(password, saltRounds) — saltRounds=10 is the industry standard
-    // Higher = slower hash (harder to brute force), but 10 is the sweet spot
-    const passwordHash = await bcrypt.hash('password123', 10);
-    const testUser = await User.create({
-      name: 'Test User',
-      email: 'test@amazon.com',
-      password_hash: passwordHash,
-    });
-    console.log('   ✅ Test user: test@amazon.com / password123\n');
-
-    // Step 6: Create a default address for the test user
-    console.log('📍 Creating sample address...');
-    const address = await Address.create({
-      user_id: testUser.id,
-      full_name: 'Test User',
-      line1: '42 MG Road',
-      line2: 'Apt 3B',
-      city: 'Bangalore',
-      state: 'Karnataka',
-      pincode: '560001',
-      is_default: true,
-    });
-    console.log('   ✅ Sample address created.\n');
-
-    // Step 7: Create a sample completed order
-    console.log('🛒 Creating sample order...');
-    const sampleProducts = await Product.findAll({ limit: 3 });
-
-    const subtotal = sampleProducts.reduce((sum, p) => sum + parseFloat(p.price), 0);
-    const shipping_fee = subtotal > 499 ? 0 : 40;
-    const total = subtotal + shipping_fee;
-
-    const order = await Order.create({
-      user_id: testUser.id,
-      address_id: address.id,
-      status: 'delivered',
-      subtotal: subtotal.toFixed(2),
-      shipping_fee: shipping_fee.toFixed(2),
-      total: total.toFixed(2),
-      placed_at: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000), // 7 days ago
-    });
-
-    const orderItems = sampleProducts.map(p => ({
-      order_id: order.id,
-      product_id: p.id,
-      quantity: 1,
-      unit_price: p.price,
-    }));
-    await OrderItem.bulkCreate(orderItems);
-    console.log(`   ✅ Sample order created with ${orderItems.length} items.\n`);
-
-    console.log('🎉 Seeding complete!');
-    console.log('─────────────────────────────────────────────');
-    console.log(`   Categories : ${Object.keys(categoryMap).length}`);
-    console.log(`   Products   : ${productCount}`);
-    console.log(`   Images     : ${imageCount}`);
-    console.log(`   Users      : 1 (test@amazon.com / password123)`);
-    console.log(`   Orders     : 1 (delivered)`);
-    console.log('─────────────────────────────────────────────');
-
-    process.exit(0);
-  } catch (error) {
-    console.error('❌ Seeding failed:', error);
-    process.exit(1);
-  }
-};
-
-seed();
+if (startIndex > -1 && endIndex > -1) {
+  const newContent = seedContent.slice(0, startIndex) + newProductData + seedContent.slice(endIndex + 2);
+  fs.writeFileSync(seedPath, newContent);
+  console.log('Seed updated successfully!');
+} else {
+  console.log('Could not find productData block.');
+}
