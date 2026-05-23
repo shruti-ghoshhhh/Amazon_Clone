@@ -9,7 +9,11 @@
     "start": "node src/app.js",
     "seed": "node src/seeders/seed.js"
   },
-  "keywords": ["amazon", "ecommerce", "rest-api"],
+  "keywords": [
+    "amazon",
+    "ecommerce",
+    "rest-api"
+  ],
   "author": "",
   "license": "ISC",
   "dependencies": {
@@ -23,6 +27,7 @@
     "morgan": "^1.10.1",
     "mysql2": "^3.22.3",
     "nodemailer": "^8.0.7",
+    "razorpay": "^2.9.6",
     "sequelize": "^6.37.8",
     "uuid": "^14.0.0"
   },

@@ -24,6 +24,22 @@ const getPrimaryImage = (images = []) => {
   return (images.find(i => i.is_primary) || images[0]).url;
 };
 
+const loadRazorpayScript = () => {
+  return new Promise((resolve) => {
+    // If script is already loaded, resolve immediately
+    if (window.Razorpay) {
+      resolve(true);
+      return;
+    }
+    const script = document.createElement('script');
+    script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+    script.async = true;
+    script.onload = () => resolve(true);
+    script.onerror = () => resolve(false);
+    document.body.appendChild(script);
+  });
+};
+
 export default function Checkout() {
   const { cart, fetchCart } = useCart();
   const navigate = useNavigate();
@@ -86,12 +102,65 @@ export default function Checkout() {
 
     setPlacing(true);
     setError('');
+
+    // Load Razorpay script dynamically
+    const resScript = await loadRazorpayScript();
+    if (!resScript) {
+      setError('Failed to load Razorpay SDK. Please check your internet connection.');
+      setPlacing(false);
+      return;
+    }
+
     try {
-      const { data } = await api.post('/orders', { address_id: selectedAddr });
-      await fetchCart(); // Refresh cart — backend cleared it, badge goes to 0
-      navigate(`/order-confirmation/${data.data.id}`);
+      // Step 1: Create a Razorpay Order on the backend
+      const { data } = await api.post('/orders/razorpay', { address_id: selectedAddr });
+      const rzpOrder = data.data;
+
+      // Step 2: Open Razorpay Checkout modal
+      const options = {
+        key: 'rzp_test_SskjiutIVK2yci', // Razorpay Test Key ID
+        amount: rzpOrder.amount,
+        currency: rzpOrder.currency,
+        name: 'Amazon Clone Retail',
+        description: 'Payment for your order',
+        order_id: rzpOrder.id,
+        handler: async function (response) {
+          try {
+            setPlacing(true);
+            setError('');
+            // Step 3: Verify cryptographic signature on backend and place order
+            const verifyRes = await api.post('/orders/verify', {
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_signature: response.razorpay_signature,
+              address_id: selectedAddr,
+            });
+            await fetchCart(); // Refresh cart badge count
+            navigate(`/order-confirmation/${verifyRes.data.data.id}`);
+          } catch (err) {
+            setError(err.response?.data?.message || 'Payment signature verification failed. Please try again.');
+            setPlacing(false);
+          }
+        },
+        prefill: {
+          name: 'Test User',
+          email: 'test@amazon.com',
+        },
+        theme: {
+          color: '#FF9900', // Amazon Gold Accent
+        },
+        modal: {
+          ondismiss: function () {
+            setPlacing(false);
+          }
+        }
+      };
+
+      const paymentObject = new window.Razorpay(options);
+      paymentObject.open();
+
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to place order. Please try again.');
+      setError(err.response?.data?.message || 'Failed to initialize payment gateway. Please try again.');
       setPlacing(false);
     }
   };
