@@ -43,10 +43,31 @@ const PORT = process.env.PORT || 5000;
 // e.g. X-Content-Type-Options, X-Frame-Options, Content-Security-Policy
 app.use(helmet());
 
-// cors() allows the frontend (running on port 5173) to call this API
-// Without this, browsers block cross-origin requests by default
+// cors() allows the frontend to call this API
+// We use a dynamic origin check to seamlessly allow localhost, Vercel production,
+// and your custom CLIENT_URL, while stripping any accidental trailing slashes.
 app.use(cors({
-  origin: process.env.CLIENT_URL || 'http://localhost:5173',
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like curl, postman, or mobile apps)
+    if (!origin) return callback(null, true);
+
+    const allowedOrigins = [
+      'http://localhost:5173',
+      'http://localhost:3000',
+      'https://amazon-clone-gray-zeta.vercel.app',
+      process.env.CLIENT_URL
+    ].filter(Boolean);
+
+    // Normalize: Remove trailing slash for exact string matching
+    const cleanOrigin = origin.replace(/\/$/, "");
+    const isAllowed = allowedOrigins.some(o => o.replace(/\/$/, "") === cleanOrigin);
+
+    if (isAllowed) {
+      callback(null, true);
+    } else {
+      callback(new Error(`CORS policy blocked request from origin: ${origin}`));
+    }
+  },
   credentials: true, // Allow cookies/auth headers to be sent
 }));
 
