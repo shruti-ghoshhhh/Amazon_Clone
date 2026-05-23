@@ -1,0 +1,653 @@
+/* ── Premium Multi-Panel Grid Overlay ─────────────────────── */
+.home-overlay-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  margin: 30px auto 32px;   /* Separated from HeroCarousel so cards sit cleanly below it */
+  max-width: var(--max-width);
+  padding: 0 20px;
+  position: relative;
+  z-index: 10;
+}
+
+.home-overlay-card {
+  background: var(--color-white, #ffffff);
+  border-radius: var(--radius-md, 8px);
+  padding: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  min-height: 420px;
+  box-sizing: border-box;
+}
+
+.home-overlay-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+}
+
+.home-overlay-card__title {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--color-text-primary, #0f1111);
+  margin-bottom: 15px;
+  line-height: 1.25;
+}
+
+/* 2x2 Grid for clothing/wishlist deals */
+.home-overlay-card__grid-2x2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  flex-grow: 1;
+  margin-bottom: 15px;
+}
+
+.home-overlay-card__grid-item {
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  color: inherit;
+  font-size: 12px;
+}
+
+.home-overlay-card__grid-item img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: 4px;
+  background: #f7f7f7;
+  margin-bottom: 6px;
+  transition: transform 0.2s ease;
+}
+
+.home-overlay-card__grid-item:hover img {
+  transform: scale(1.05);
+}
+
+.home-overlay-card__grid-item span {
+  font-weight: 600;
+  color: #0f1111;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.home-overlay-card__see-all {
+  font-size: 13px;
+  color: var(--color-text-link, #007185);
+  text-decoration: none;
+  font-weight: 600;
+  margin-top: auto;
+  display: inline-block;
+}
+
+.home-overlay-card__see-all:hover {
+  color: var(--color-text-link-hover, #c45500);
+  text-decoration: underline;
+}
+
+/* 📱 REDMI Turbo 5 Promo Panel */
+.redmi-promo-card {
+  background: linear-gradient(180deg, #11141a 0%, #1c2330 100%);
+}
+
+.redmi-promo-card .home-overlay-card__title {
+  color: #ffffff;
+}
+
+.redmi-promo-card__visual {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  border-radius: 6px;
+  background: #000;
+  margin-bottom: 12px;
+}
+
+.redmi-promo-card__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.95;
+  transition: transform 0.4s ease;
+}
+
+.redmi-promo-card:hover .redmi-promo-card__img {
+  transform: scale(1.06);
+}
+
+.redmi-promo-card__badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: var(--color-orange, #c45500);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 4px 8px;
+  border-radius: 3px;
+  letter-spacing: 0.5px;
+}
+
+.redmi-promo-card__tagline {
+  color: #a2aab8;
+  font-size: 13px;
+  line-height: 1.4;
+  margin-bottom: 15px;
+}
+
+.redmi-promo-card__notify-btn {
+  background: #ffffff;
+  color: #0f1111;
+  border: 1px solid #cccccc;
+  font-weight: 600;
+  font-size: 13px;
+  padding: 8px 16px;
+  border-radius: 20px;
+  width: 100%;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: auto;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.redmi-promo-card__notify-btn:hover {
+  background: var(--color-orange, #c45500);
+  color: #ffffff;
+  border-color: var(--color-orange, #c45500);
+  box-shadow: 0 4px 10px rgba(196, 85, 0, 0.2);
+}
+
+/* 🎁 Deals based on lists */
+.deals-list-card {
+  border: 1px solid rgba(220, 53, 69, 0.15);
+}
+
+.home-overlay-card__loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-grow: 1;
+}
+
+.home-overlay-card__deal-item {
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  color: inherit;
+  font-size: 11px;
+}
+
+.home-overlay-card__deal-img-wrap {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fdfdfd;
+  border-radius: 4px;
+  border: 1px solid rgba(0, 0, 0, 0.03);
+  padding: 6px;
+  margin-bottom: 6px;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.home-overlay-card__deal-img-wrap img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  transition: transform 0.2s ease;
+}
+
+.home-overlay-card__deal-item:hover img {
+  transform: scale(1.06);
+}
+
+.home-overlay-card__deal-pill {
+  background: #CC0C39;
+  color: #ffffff;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 2px;
+  align-self: flex-start;
+  margin-bottom: 4px;
+  letter-spacing: -0.2px;
+}
+
+.home-overlay-card__deal-name {
+  font-size: 11px;
+  font-weight: 600;
+  color: #0f1111;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.home-overlay-card__empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex-grow: 1;
+  color: var(--color-text-secondary, #565959);
+}
+
+/* 💳 Prime Pay ICICI CC Card */
+.prime-cc-card {
+  border: 1px solid rgba(0, 168, 224, 0.15);
+}
+
+.prime-cc-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.prime-cc-card__header .home-overlay-card__title {
+  margin-bottom: 0;
+}
+
+.prime-tag {
+  color: #00A8E0;
+  font-style: italic;
+  font-weight: 900;
+  font-size: 16px;
+}
+
+.prime-cc-card__visual {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  border-radius: 8px;
+  overflow: hidden;
+  background: linear-gradient(135deg, #0f1a24 0%, #03080e 100%);
+  margin-bottom: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.prime-cc-card__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.45;
+}
+
+.prime-cc-card__glass-glow {
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255,215,0,0.15) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.prime-cc-card__text-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  color: #ffffff;
+  box-sizing: border-box;
+}
+
+.cc-text-top {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  color: #ffd700;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+}
+
+.cc-text-mid {
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  color: #ffffff;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+  margin: auto 0;
+}
+
+.cc-text-bot {
+  font-size: 10px;
+  font-weight: 500;
+  color: #00A8E0;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+}
+
+.prime-cc-card__desc {
+  font-size: 13px;
+  color: var(--color-text-secondary, #565959);
+  line-height: 1.4;
+  margin-bottom: 14px;
+}
+
+.prime-cc-card__cta {
+  background: var(--color-btn-cart, #ffd814);
+  color: var(--color-text-primary, #0f1111);
+  border: 1px solid #FCD200;
+  font-weight: 600;
+  font-size: 13px;
+  padding: 8px 16px;
+  border-radius: 20px;
+  width: 100%;
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  box-sizing: border-box;
+}
+
+.prime-cc-card__cta:hover {
+  background: var(--color-btn-cart-hover, #f7ca00);
+  border-color: #f2c200;
+  text-decoration: none;
+  color: var(--color-text-primary, #0f1111);
+}
+
+/* 🔵 Circular Category Pills Strip */
+.category-pills-bar {
+  max-width: var(--max-width);
+  margin: 0 auto 32px;
+  padding: 0 20px;
+  box-sizing: border-box;
+}
+
+.category-pills-bar__title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--color-text-primary, #0f1111);
+  margin-bottom: 15px;
+  border-bottom: 1px solid #e7e7e7;
+  padding-bottom: 8px;
+}
+
+.category-pills-bar__scroll {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  padding: 6px 4px 12px;
+  scrollbar-width: thin;
+  scrollbar-color: #cccccc transparent;
+}
+
+/* Hide scrollbar for Chrome/Safari */
+.category-pills-bar__scroll::-webkit-scrollbar {
+  height: 6px;
+}
+
+.category-pills-bar__scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.category-pills-bar__scroll::-webkit-scrollbar-thumb {
+  background-color: #cccccc;
+  border-radius: 10px;
+}
+
+.category-pill {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-decoration: none;
+  color: inherit;
+  flex-shrink: 0;
+  width: 84px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.category-pill:hover {
+  transform: translateY(-2px);
+  text-decoration: none;
+  color: inherit;
+}
+
+.category-pill__circle {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: #ffffff;
+  border: 2px solid #ffffff;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 8px;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.category-pill:hover .category-pill__circle {
+  border-color: var(--color-orange, #c45500);
+  box-shadow: 0 4px 12px rgba(196, 85, 0, 0.15);
+}
+
+.category-pill__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.25s ease;
+}
+
+.category-pill:hover .category-pill__img {
+  transform: scale(1.08);
+}
+
+.category-pill__label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-text-primary, #0f1111);
+  text-align: center;
+  line-height: 1.2;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  max-width: 100%;
+}
+
+/* ── Section wrapper ──────────────────────────────────────── */
+.home-section {
+  max-width: var(--max-width);
+  margin: 0 auto 32px;
+  padding: 0 16px;
+}
+
+.home-section__header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  border-bottom: 2px solid var(--color-orange);
+  padding-bottom: 10px;
+}
+.home-section__title {
+  font-size: 21px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+.home-section__see-all {
+  font-size: 13px;
+  color: var(--color-text-link);
+  text-decoration: none;
+}
+.home-section__see-all:hover {
+  color: var(--color-text-link-hover);
+  text-decoration: underline;
+}
+
+/* ── Product carousel row ─────────────────────────────────── */
+.home-product-row {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+}
+
+/* ── Deals banner strip ───────────────────────────────────── */
+.deals-strip {
+  max-width: var(--max-width);
+  margin: 0 auto 32px;
+  padding: 0 16px;
+  background: linear-gradient(135deg, #131A22 0%, #232F3E 100%);
+  border-radius: var(--radius-md);
+  padding: 28px 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+.deals-strip__text h2 {
+  color: white;
+  font-size: 24px;
+  margin-bottom: 6px;
+}
+.deals-strip__text p {
+  color: var(--color-orange-light);
+  font-size: 14px;
+}
+.deals-strip__cta {
+  background: var(--color-btn-cart);
+  color: var(--color-text-primary);
+  padding: 12px 28px;
+  border-radius: var(--radius-sm);
+  font-weight: 700;
+  font-size: 15px;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background 0.15s;
+  flex-shrink: 0;
+}
+.deals-strip__cta:hover {
+  background: var(--color-btn-cart-hover);
+  text-decoration: none;
+  color: var(--color-text-primary);
+}
+
+/* ── Skeleton loading grid ────────────────────────────────── */
+.skeleton-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+}
+.skeleton-card {
+  background: white;
+  border: 1px solid var(--color-card-border);
+  border-radius: var(--radius-sm);
+  padding: 12px;
+}
+.skeleton-img   { height: 180px; margin-bottom: 10px; }
+.skeleton-title { height: 14px; margin-bottom: 6px; }
+.skeleton-title-sm { height: 14px; width: 60%; margin-bottom: 10px; }
+.skeleton-price { height: 22px; width: 40%; }
+
+/* ── Bottom Promo Category Cards ("More to Explore") ──────── */
+.home-categories {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  margin-top: 20px;
+  max-width: var(--max-width);
+}
+
+.category-card {
+  background: var(--color-white, #ffffff);
+  border-radius: var(--radius-md, 8px);
+  padding: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  min-height: 340px;
+  box-sizing: border-box;
+  text-decoration: none;
+  color: inherit;
+}
+
+.category-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+  text-decoration: none;
+  color: inherit;
+}
+
+.category-card__img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: 6px;
+  background: #f7f7f7;
+  margin-bottom: 15px;
+  transition: transform 0.25s ease;
+}
+
+.category-card:hover .category-card__img {
+  transform: scale(1.04);
+}
+
+.category-card__body {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  justify-content: space-between;
+}
+
+.category-card__name {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--color-text-primary, #0f1111);
+  margin-bottom: 12px;
+  line-height: 1.3;
+}
+
+.category-card__see-more {
+  font-size: 13px;
+  color: var(--color-text-link, #007185);
+  font-weight: 600;
+  text-decoration: none;
+  margin-top: auto;
+  display: inline-block;
+}
+
+.category-card:hover .category-card__see-more {
+  color: var(--color-text-link-hover, #c45500);
+  text-decoration: underline;
+}
+
+/* ── RESPONSIVE MEDIA QUERIES ───────────────────────────────── */
+@media (max-width: 1024px) {
+  .home-overlay-grid   { grid-template-columns: repeat(2, 1fr); margin-top: 24px; gap: 16px; }
+  .home-categories     { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+  .home-product-row    { grid-template-columns: repeat(4, 1fr); }
+  .skeleton-grid       { grid-template-columns: repeat(4, 1fr); }
+}
+
+@media (max-width: 768px) {
+  .home-overlay-grid   { grid-template-columns: repeat(1, 1fr); margin-top: 20px; gap: 16px; }
+  .home-categories     { grid-template-columns: repeat(1, 1fr); gap: 16px; }
+  .home-product-row    { grid-template-columns: repeat(2, 1fr); }
+  .skeleton-grid       { grid-template-columns: repeat(2, 1fr); }
+  .deals-strip         { flex-direction: column; text-align: center; }
+  .home-section__title { font-size: 17px; }
+}
+
+@media (max-width: 480px) {
+  .home-overlay-grid   { grid-template-columns: repeat(1, 1fr); gap: 12px; margin-top: 16px; }
+  .home-categories     { grid-template-columns: repeat(1, 1fr); gap: 12px; }
+}

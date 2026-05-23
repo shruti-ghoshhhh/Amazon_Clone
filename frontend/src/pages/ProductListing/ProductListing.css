@@ -1,0 +1,560 @@
+/* ProductListing.css — Amazon.in faithful search results page
+   
+   Layout:
+     .pl-layout = sidebar (220px fixed) + main (flex-1)
+     
+   Sidebar sections match Amazon exactly:
+     Department → Amazon Prime → Delivery Day → Rating → Price
+   
+   Main area:
+     "Results" h1 + subtitle → results bar → grid → pagination
+*/
+
+/* ── Page background wrapper ───────────────────────────────── */
+.pl-page-bg {
+  background: var(--color-page-bg);
+  min-height: 100vh;
+}
+
+/* ── Two-column layout: sidebar + main ─────────────────────── */
+.pl-layout {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 16px 16px 32px;
+  display: flex;
+  gap: 0;
+  align-items: flex-start;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   SIDEBAR
+   ═══════════════════════════════════════════════════════════ */
+.pl-sidebar {
+  width: 220px;
+  flex-shrink: 0;
+  position: sticky;
+  top: 108px;               /* Below fixed navbar (60px top row + 38px bottom row + 10px gap) */
+  max-height: calc(100vh - 120px);
+  overflow-y: auto;
+  padding-right: 16px;
+  scrollbar-width: thin;
+  scrollbar-color: #ddd transparent;
+}
+
+.pl-sidebar::-webkit-scrollbar       { width: 4px; }
+.pl-sidebar::-webkit-scrollbar-track { background: transparent; }
+.pl-sidebar::-webkit-scrollbar-thumb { background: #ccc; border-radius: 2px; }
+
+/* Breadcrumb above sidebar */
+.pl-sidebar-breadcrumb {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  margin-bottom: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--color-card-border);
+}
+
+.pl-sidebar-bc-link {
+  color: var(--color-text-link);
+  text-decoration: none;
+}
+.pl-sidebar-bc-link:hover { text-decoration: underline; color: var(--color-text-link-hover); }
+.pl-sidebar-bc-sep { color: var(--color-text-secondary); }
+
+/* Each filter group card */
+.pl-sidebar-section {
+  border-bottom: 1px solid var(--color-card-border);
+  padding: 14px 0;
+}
+
+.pl-sidebar-h3 {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin-bottom: 10px;
+  line-height: 1.3;
+}
+
+/* Department link rows */
+.pl-dept-link {
+  display: block;
+  padding: 3px 0;
+  font-size: 13px;
+  color: var(--color-text-link);
+  cursor: pointer;
+  text-decoration: none;
+  transition: color 0.15s;
+  line-height: 1.5;
+}
+.pl-dept-link:hover       { color: var(--color-text-link-hover); text-decoration: underline; }
+.pl-dept-link.active      { font-weight: 700; color: var(--color-text-primary); pointer-events: none; }
+.pl-dept-bullet           { font-size: 10px; color: var(--color-text-primary); }
+
+/* ── Amazon Prime checkbox row ─────────────────────────────── */
+.pl-prime-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  padding: 3px 0;
+}
+
+.pl-prime-checkbox {
+  width: 14px;
+  height: 14px;
+  cursor: pointer;
+  accent-color: var(--color-orange);
+  flex-shrink: 0;
+}
+
+.pl-prime-svg {
+  width: 44px;
+  height: 14px;
+  display: block;
+}
+
+/* ── Delivery Day checkboxes ────────────────────────────────── */
+.pl-delivery-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 3px 0;
+  cursor: pointer;
+}
+
+.pl-delivery-checkbox {
+  width: 14px;
+  height: 14px;
+  cursor: pointer;
+  accent-color: var(--color-orange);
+  flex-shrink: 0;
+}
+
+.pl-delivery-text {
+  font-size: 13px;
+  color: var(--color-text-link);
+  transition: color 0.15s;
+}
+.pl-delivery-label:hover .pl-delivery-text { color: var(--color-text-link-hover); text-decoration: underline; }
+
+/* ── Star rating filter rows ───────────────────────────────── */
+.pl-star-row {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 0;
+  cursor: pointer;
+  text-decoration: none;
+  transition: opacity 0.15s;
+}
+.pl-star-row:hover { opacity: 0.8; }
+.pl-star-row.active .pl-star-svg.filled { filter: none; }
+
+.pl-stars {
+  display: flex;
+  align-items: center;
+  gap: 1px;
+}
+
+.pl-star-svg {
+  display: block;
+}
+.pl-star-svg.filled polygon {
+  fill: var(--color-star, #FF9900);
+  stroke: var(--color-star, #FF9900);
+  stroke-width: 1;
+}
+.pl-star-svg.empty polygon {
+  fill: none;
+  stroke: #ccc;
+  stroke-width: 1;
+}
+
+.pl-star-up {
+  font-size: 12px;
+  color: var(--color-text-link);
+  white-space: nowrap;
+}
+.pl-star-row.active .pl-star-up { font-weight: 700; color: var(--color-text-primary); }
+
+/* ── Price range filter ─────────────────────────────────────── */
+.pl-price-range-info {
+  font-size: 13px;
+  color: var(--color-text-primary);
+  margin-bottom: 8px;
+}
+.pl-price-range-info strong {
+  font-weight: 700;
+  color: var(--color-text-sale, #B12704);
+}
+
+.pl-price-slider-wrap {
+  margin-bottom: 12px;
+}
+
+.pl-price-slider {
+  width: 100%;
+  accent-color: var(--color-orange, #FF9900);
+  cursor: pointer;
+  height: 6px;
+  border-radius: 3px;
+  background: #e6e6e6;
+  outline: none;
+  margin-bottom: 4px;
+}
+
+.pl-price-slider-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: var(--color-text-secondary);
+}
+
+.pl-price-quick-links {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--color-card-border);
+}
+
+.pl-price-quick-links a {
+  font-size: 13px;
+  color: var(--color-text-link, #007185);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.pl-price-quick-links a:hover {
+  color: var(--color-text-link-hover, #C7511F);
+  text-decoration: underline;
+}
+
+.pl-price-inputs {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
+
+.pl-price-input {
+  width: 72px;
+  padding: 5px 8px;
+  border: 1px solid var(--color-card-border);
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  outline: none;
+  color: var(--color-text-primary);
+  font-family: var(--font-family);
+}
+.pl-price-input:focus { border-color: var(--color-orange); box-shadow: 0 0 0 2px rgba(255,153,0,0.2); }
+
+.pl-price-dash { font-size: 12px; color: var(--color-text-secondary); }
+
+.pl-price-go {
+  background: #F0F2F2;
+  border: 1px solid var(--color-card-border);
+  border-radius: var(--radius-sm);
+  padding: 5px 12px;
+  font-size: 13px;
+  cursor: pointer;
+  font-family: var(--font-family);
+  color: var(--color-text-primary);
+  transition: background 0.15s;
+}
+.pl-price-go:hover { background: #ddd; }
+
+/* ── Clear filters button ───────────────────────────────────── */
+.pl-clear-btn {
+  margin-top: 14px;
+  padding: 7px 14px;
+  background: white;
+  border: 1px solid var(--color-card-border);
+  border-radius: var(--radius-sm);
+  width: 100%;
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--color-text-link);
+  font-family: var(--font-family);
+  text-align: left;
+  transition: background 0.15s;
+}
+.pl-clear-btn:hover { background: #f7f7f7; color: var(--color-text-link-hover); text-decoration: underline; }
+
+/* ═══════════════════════════════════════════════════════════
+   MAIN RESULTS AREA
+   ═══════════════════════════════════════════════════════════ */
+.pl-main {
+  flex: 1;
+  min-width: 0;
+  padding-left: 16px;
+  border-left: 1px solid var(--color-card-border);
+}
+
+/* ── "Results" heading block — exactly like Amazon ──────────── */
+.pl-results-header-block {
+  margin-bottom: 8px;
+}
+
+.pl-breadcrumb-bar {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 2px;
+}
+
+.pl-bc-link {
+  color: var(--color-text-link);
+  text-decoration: none;
+}
+.pl-bc-link:hover { text-decoration: underline; color: var(--color-text-link-hover); }
+.pl-bc-sep { color: var(--color-text-secondary); }
+.pl-bc-current { color: var(--color-text-secondary); font-size: 13px; }
+
+.pl-results-heading {
+  font-size: 24px;
+  font-weight: 400;                /* Amazon uses regular weight for "Results" */
+  color: var(--color-text-primary);
+  margin-bottom: 4px;
+  line-height: 1.2;
+}
+
+.pl-results-subtitle {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  line-height: 1.4;
+  margin-bottom: 12px;
+}
+
+/* Highlighted part (product size/colour) */
+.pl-results-subtitle a {
+  color: var(--color-text-link);
+}
+
+/* ── Results count bar + sort dropdown ──────────────────────── */
+.pl-results-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 8px 0 10px;
+  border-top: 1px solid var(--color-card-border);
+  border-bottom: 1px solid var(--color-card-border);
+  margin-bottom: 16px;
+  background: white;
+  padding: 8px 12px;
+  border: 1px solid var(--color-card-border);
+  border-radius: var(--radius-sm);
+}
+
+.pl-results-count {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+  line-height: 1.4;
+}
+
+.pl-results-query {
+  font-weight: 400;
+  color: var(--color-text-sale);
+}
+
+.pl-results-searching {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+  font-style: italic;
+}
+
+.pl-sort-wrap {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.pl-sort-label {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+}
+
+.pl-sort-select {
+  padding: 5px 30px 5px 10px;
+  border: 1px solid var(--color-card-border);
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  background: white;
+  cursor: pointer;
+  outline: none;
+  color: var(--color-text-primary);
+  font-family: var(--font-family);
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23555'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+}
+.pl-sort-select:focus { border-color: var(--color-orange); }
+
+/* ── Active filter pills ─────────────────────────────────────── */
+.pl-active-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.pl-filter-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  background: white;
+  border: 1px solid var(--color-card-border);
+  border-radius: var(--radius-pill);
+  font-size: 12px;
+  color: var(--color-text-primary);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+}
+
+.pl-filter-pill button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  padding: 0;
+  line-height: 1;
+}
+.pl-filter-pill button:hover { color: var(--color-text-primary); }
+
+/* ── Product grid — 4 columns by default ────────────────────── */
+.pl-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin-bottom: 28px;
+}
+
+/* ── Skeleton placeholders ──────────────────────────────────── */
+.pl-skeleton-card {
+  background: white;
+  border: 1px solid var(--color-card-border);
+  border-radius: var(--radius-sm);
+  padding: 14px;
+}
+.pl-skeleton-img      { height: 200px; margin-bottom: 10px; }
+.pl-skeleton-brand    { height: 11px; width: 40%; margin-bottom: 6px; }
+.pl-skeleton-title    { height: 13px; margin-bottom: 5px; }
+.pl-skeleton-title-sm { height: 13px; width: 70%; margin-bottom: 10px; }
+.pl-skeleton-price    { height: 22px; width: 45%; margin-bottom: 8px; }
+.pl-skeleton-btn      { height: 32px; border-radius: 20px; }
+
+/* ── No results empty state ─────────────────────────────────── */
+.pl-no-results {
+  text-align: center;
+  padding: 60px 20px;
+  background: white;
+  border: 1px solid var(--color-card-border);
+  border-radius: var(--radius-sm);
+}
+.pl-no-results h2 { margin-bottom: 10px; font-size: 22px; font-weight: 400; }
+.pl-no-results p  { color: var(--color-text-secondary); font-size: 14px; margin-bottom: 24px; }
+
+/* ── Pagination ─────────────────────────────────────────────── */
+.pl-pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+  padding: 20px 0;
+  flex-wrap: wrap;
+}
+
+.pl-page-btn {
+  min-width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--color-card-border);
+  border-radius: var(--radius-sm);
+  background: white;
+  color: var(--color-text-link);
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: var(--font-family);
+  padding: 0 10px;
+  white-space: nowrap;
+}
+.pl-page-btn:hover:not(:disabled) { background: #F7F8F8; border-color: #aaa; color: var(--color-text-link-hover); }
+.pl-page-btn.active {
+  background: var(--color-orange);
+  border-color: var(--color-orange);
+  color: white;
+  font-weight: 700;
+  pointer-events: none;
+}
+.pl-page-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.pl-page-ellipsis {
+  padding: 0 6px;
+  color: var(--color-text-secondary);
+  font-size: 14px;
+}
+
+/* ── Mobile filter toggle ───────────────────────────────────── */
+.pl-mobile-filter-row {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 10px 16px 0;
+}
+
+.pl-mobile-filter-btn {
+  display: none;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  background: white;
+  border: 1px solid var(--color-card-border);
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  cursor: pointer;
+  margin-bottom: 10px;
+  font-family: var(--font-family);
+  color: var(--color-text-primary);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   RESPONSIVE BREAKPOINTS
+   ═══════════════════════════════════════════════════════════ */
+
+@media (max-width: 1200px) {
+  .pl-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+@media (max-width: 1024px) {
+  .pl-sidebar { width: 190px; }
+  .pl-grid    { grid-template-columns: repeat(3, 1fr); }
+}
+
+@media (max-width: 768px) {
+  .pl-layout        { flex-direction: column; padding: 10px; gap: 0; }
+  .pl-sidebar       { width: 100%; position: static; display: none; max-height: none; padding-right: 0; border-left: none; }
+  .pl-sidebar.open  { display: block; }
+  .pl-main          { padding-left: 0; border-left: none; }
+  .pl-grid          { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .pl-mobile-filter-btn { display: flex; }
+  .pl-results-heading   { font-size: 19px; }
+}
+
+@media (max-width: 480px) {
+  .pl-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  .pl-results-bar { flex-direction: column; align-items: flex-start; gap: 6px; }
+}

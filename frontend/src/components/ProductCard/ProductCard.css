@@ -1,0 +1,301 @@
+/* ProductCard.css — Amazon.in faithful product card styles
+   
+   KEY VISUAL RULES (matching Amazon exactly):
+   • Card: white bg, NO border by default — only faint shadow
+   • On hover: shadow deepens + thin border appears
+   • Image area: zero padding, white bg, NO border — product fills frame
+   • Heart icon: invisible by default, fades in on card hover
+   • Image: smooth scale(1.08) on hover
+   • Add to Cart: always visible, full-width pill-shaped yellow button
+*/
+
+.product-card {
+  background: var(--color-white);
+  border: 1px solid transparent;           /* Invisible border; becomes visible on hover */
+  border-radius: var(--radius-sm);
+  padding: 0;                              /* No outer padding — image is flush to edges */
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+  position: relative;
+  text-decoration: none;
+  color: inherit;
+  height: 100%;
+  box-sizing: border-box;
+  box-shadow: var(--shadow-card);          /* Faint shadow always present */
+}
+
+.product-card:hover {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.18);
+  border-color: var(--color-card-border);
+  text-decoration: none;
+  color: inherit;
+  z-index: 2;
+}
+
+/* ── Image container — flush edges, clean white, no border ─── */
+.product-card__img-wrap {
+  width: 100%;
+  aspect-ratio: 4 / 3;                    /* Slightly wider than square — matches Amazon grid */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: #ffffff;
+  position: relative;
+  /* No margin, no padding, no border — image sits edge to edge */
+  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+}
+
+.product-card__img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;                    /* Always show full product */
+  padding: 12px;                          /* Inner breathing room so product doesn't clip */
+  box-sizing: border-box;
+  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* Smooth, slightly stronger zoom on hover — Amazon uses ~1.08 */
+.product-card:hover .product-card__img {
+  transform: scale(1.08);
+}
+
+/* ── Content area below image ────────────────────────────────── */
+.product-card__body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: 10px 14px 12px;
+}
+
+/* ── Brand name ─────────────────────────────────────────────── */
+.product-card__brand {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--color-text-secondary);
+  margin-bottom: 3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+/* ── Product title — 2-line clamp, Amazon uses regular weight ── */
+.product-card__title {
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--color-text-primary);
+  line-height: 1.45;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  margin-bottom: 5px;
+}
+
+/* Subtle orange on hover for title */
+.product-card:hover .product-card__title {
+  color: #c45500;
+}
+
+/* ── Star rating row ────────────────────────────────────────── */
+.product-card__rating {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 4px;
+  flex-wrap: wrap;
+}
+
+/* ── "X+ bought in past month" social proof ─────────────────── */
+.product-card__bought {
+  font-size: 12px;
+  color: var(--color-text-primary);
+  font-weight: 400;
+  margin-bottom: 7px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ── Price block ────────────────────────────────────────────── */
+.product-card__price-block {
+  margin: 0 0 7px;
+}
+
+.product-card__price-row {
+  display: flex;
+  align-items: baseline;
+  gap: 1px;
+  line-height: 1;
+  margin-bottom: 2px;
+}
+
+.product-card__price-symbol {
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--color-text-primary);
+  margin-right: 1px;
+  /* Rupee symbol sits at top like Amazon */
+  align-self: flex-start;
+  margin-top: 4px;
+}
+
+.product-card__price-whole {
+  font-size: 21px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  letter-spacing: -0.5px;
+  line-height: 1;
+}
+
+/* M.R.P. strikethrough + discount % */
+.product-card__mrp-row {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2px;
+  line-height: 1.4;
+}
+
+.product-card__mrp-label { color: var(--color-text-secondary); }
+.product-card__mrp       { text-decoration: line-through; color: var(--color-text-secondary); }
+.product-card__discount  { color: var(--color-text-secondary); }
+
+/* ── Prime badge + FREE delivery ────────────────────────────── */
+.product-card__prime-delivery {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-bottom: 9px;
+  min-height: 18px;
+}
+
+.product-card__prime-badge {
+  display: inline-flex;
+  align-items: center;
+}
+
+/* SVG prime logo */
+.product-card__prime-logo {
+  width: 44px;
+  height: 15px;
+  display: block;
+}
+
+.product-card__delivery {
+  font-size: 12px;
+  color: var(--color-text-primary);
+}
+
+.product-card__delivery strong {
+  font-weight: 700;
+}
+
+/* ── Out-of-stock ────────────────────────────────────────────── */
+.product-card__oos {
+  font-size: 11px;
+  color: var(--color-text-sale);
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+/* ── Add to Cart button ─────────────────────────────────────── */
+/* Amazon: full-width, pill-shaped, yellow #FFD814, always visible */
+.product-card__add-btn {
+  background: var(--color-btn-cart);
+  border: 1px solid #FCD200;
+  color: var(--color-text-primary);
+  border-radius: var(--radius-pill);
+  padding: 7px 10px;
+  font-size: 13px;
+  font-weight: 500;
+  width: 100%;
+  cursor: pointer;
+  transition: background 0.15s;
+  font-family: var(--font-family);
+  margin-top: auto;
+  display: block;
+}
+
+.product-card__add-btn:hover  { background: var(--color-btn-cart-hover); }
+.product-card__add-btn:active { transform: scale(0.98); }
+.product-card__add-btn.adding {
+  background: var(--color-text-green);
+  color: white;
+  border-color: var(--color-text-green);
+}
+
+/* ── Wishlist Heart Button ──────────────────────────────────── */
+/* Amazon: heart sits top-right of image, invisible until card is hovered */
+.product-card__wishlist-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+  z-index: 3;
+  /* Key: invisible until parent card is hovered */
+  opacity: 0;
+  transition: opacity 0.2s ease,
+              transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+              background-color 0.15s ease;
+}
+
+/* Show heart when card is hovered OR when it is already wishlisted */
+.product-card:hover .product-card__wishlist-btn,
+.product-card__wishlist-btn.active {
+  opacity: 1;
+}
+
+.product-card__wishlist-btn:hover {
+  transform: scale(1.15);
+  background: #ffffff;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+}
+
+.product-card__wishlist-btn:active {
+  transform: scale(0.9);
+}
+
+.product-card__wishlist-btn.active {
+  border-color: rgba(177, 39, 4, 0.2);
+}
+
+.product-card__wishlist-btn.active .product-card__heart-icon {
+  animation: heartPulse 0.4s ease-out;
+}
+
+.product-card__heart-icon {
+  width: 18px;
+  height: 18px;
+  transition: fill 0.2s ease, stroke 0.2s ease;
+}
+
+/* Heart pulse micro-animation */
+@keyframes heartPulse {
+  0%   { transform: scale(1);    }
+  30%  { transform: scale(1.4);  }
+  60%  { transform: scale(0.9);  }
+  100% { transform: scale(1);    }
+}
+
+/* Loading state */
+.product-card__wishlist-btn.loading {
+  opacity: 0.6;
+  pointer-events: none;
+}

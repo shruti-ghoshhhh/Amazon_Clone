@@ -1,0 +1,545 @@
+/* Navbar.css — Amazon-faithful navbar styles
+   
+   Amazon's navbar has two distinct rows:
+   Row 1 (#131A22): Logo | Deliver to | Search bar | Account | Orders | Cart
+   Row 2 (#232F3E): ☰ All | Today's Deals | Customer Service | ...
+*/
+
+/* ── Row 1: Primary Navbar ─────────────────────────────────── */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: var(--color-nav-dark);
+}
+
+.navbar-top {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 12px;
+  height: 60px;
+}
+
+/* Logo */
+.navbar-logo {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  padding: 6px 8px;
+  border: 2px solid transparent;
+  border-radius: 3px;
+  flex-shrink: 0;
+  transition: border-color 0.15s;
+}
+.navbar-logo:hover { border-color: white; text-decoration: none; }
+
+.logo-text {
+  font-size: 22px;
+  font-weight: 800;
+  color: white;
+  letter-spacing: -0.5px;
+  font-style: italic;
+}
+.logo-text span { color: var(--color-orange); }
+.logo-dot {
+  width: 6px;
+  height: 6px;
+  background: var(--color-orange);
+  border-radius: 50%;
+  margin-bottom: -8px;
+  margin-left: 1px;
+}
+
+/* Deliver to widget */
+.deliver-to {
+  display: flex;
+  flex-direction: column;
+  padding: 5px 8px;
+  border: 2px solid transparent;
+  border-radius: 3px;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: border-color 0.15s;
+  text-decoration: none;
+}
+.deliver-to:hover { border-color: white; text-decoration: none; }
+.deliver-top {
+  font-size: 11px;
+  color: #ccc;
+  line-height: 1;
+}
+.deliver-bottom {
+  font-size: 13px;
+  font-weight: 700;
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+/* Search bar */
+.navbar-search {
+  display: flex;
+  flex: 1;
+  height: 40px;
+  border-radius: 4px;
+  overflow: hidden;
+  min-width: 0;
+}
+
+.search-category {
+  background: #F3F3F3;
+  border: none;
+  border-right: 1px solid #cdcdcd;
+  padding: 0 10px;
+  font-size: 12px;
+  color: #333;
+  cursor: pointer;
+  min-width: 60px;
+  border-radius: 4px 0 0 4px;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23555'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 6px center;
+  padding-right: 20px;
+}
+
+.search-input {
+  flex: 1;
+  border: none;
+  padding: 0 12px;
+  font-size: 15px;
+  color: #0F1111;
+  outline: none;
+  min-width: 0;
+}
+.search-input::placeholder { color: #999; }
+
+.search-btn {
+  background: var(--color-orange-light);
+  border: none;
+  padding: 0 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0 4px 4px 0;
+  transition: background 0.15s;
+  flex-shrink: 0;
+}
+.search-btn:hover { background: var(--color-orange); }
+.search-btn svg { color: #333; }
+
+/* Account, Orders, Cart — right side nav items */
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 5px 8px;
+  border: 2px solid transparent;
+  border-radius: 3px;
+  cursor: pointer;
+  text-decoration: none;
+  flex-shrink: 0;
+  transition: border-color 0.15s;
+  min-width: fit-content;
+}
+.nav-item:hover { border-color: white; text-decoration: none; }
+
+.nav-item-top {
+  font-size: 11px;
+  color: #ccc;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+.nav-item-bottom {
+  font-size: 13px;
+  font-weight: 700;
+  color: white;
+  white-space: nowrap;
+}
+
+/* Cart item — special layout with icon + count */
+.cart-nav {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 8px;
+  border: 2px solid transparent;
+  border-radius: 3px;
+  text-decoration: none;
+  transition: border-color 0.15s;
+  position: relative;
+}
+.cart-nav:hover { border-color: white; text-decoration: none; }
+
+.cart-icon-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.cart-count {
+  position: absolute;
+  top: -8px;
+  left: 14px;
+  background: var(--color-orange);
+  color: white;
+  font-size: 13px;
+  font-weight: 700;
+  min-width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+.cart-label {
+  font-size: 13px;
+  font-weight: 700;
+  color: white;
+}
+
+/* ── Row 2: Secondary Nav ──────────────────────────────────── */
+.navbar-bottom {
+  background: var(--color-nav-mid);
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  height: 38px;
+  gap: 4px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.navbar-bottom::-webkit-scrollbar { display: none; }
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 10px;
+  color: white;
+  font-size: 13px;
+  font-weight: 500;
+  white-space: nowrap;
+  text-decoration: none;
+  border: 2px solid transparent;
+  border-radius: 3px;
+  transition: border-color 0.15s;
+  cursor: pointer;
+}
+.nav-link:hover { border-color: white; color: white; text-decoration: none; }
+.nav-link.bold { font-weight: 700; }
+
+/* ── Search form ───────────────────────────────────────────── */
+.navbar-search-form {
+  display: contents;
+}
+
+/* Mobile search toggle */
+.search-mobile-btn {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  color: white;
+  background: none;
+  border: 2px solid transparent;
+  border-radius: 3px;
+}
+.search-mobile-btn:hover { border-color: white; }
+
+@media (max-width: 768px) {
+  .navbar-top { padding: 6px 8px; gap: 6px; }
+
+  .deliver-to  { display: none; }
+  .search-category { display: none; }
+
+  .nav-item-top    { display: none; }
+  .nav-item-bottom { font-size: 12px; }
+
+  .cart-label { display: none; }
+
+  .search-mobile-btn { display: flex; }
+}
+
+/* ── Account & Lists Dropdown ────────────────────────────── */
+.account-dropdown-trigger {
+  position: relative;
+}
+
+.account-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  width: 340px;
+  background-color: var(--color-white);
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+  display: none;
+  flex-direction: column;
+  padding: 16px 20px;
+  z-index: 1010;
+  cursor: default;
+}
+
+.account-dropdown-trigger:hover .account-dropdown {
+  display: flex;
+}
+
+.dropdown-signin-prompt {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding-bottom: 12px;
+  text-align: center;
+  width: 100%;
+}
+
+.dropdown-signin-prompt .dropdown-signin-btn {
+  width: 180px;
+  padding: 6px;
+  font-size: 12px;
+  text-align: center;
+  font-weight: 500;
+  border-radius: 3px;
+  background: linear-gradient(to bottom, #f7dfa5, #f0c14b);
+  border: 1px solid #a88734;
+  color: #111;
+  text-decoration: none;
+}
+.dropdown-signin-prompt .dropdown-signin-btn:hover {
+  background: linear-gradient(to bottom, #f5d78e, #eeb933);
+  text-decoration: none;
+}
+
+.dropdown-user-header {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-bottom: 10px;
+}
+
+.dropdown-user-header span {
+  display: block;
+}
+
+.dropdown-divider {
+  border: none;
+  border-top: 1px solid #eee;
+  margin: 8px 0;
+  width: 100%;
+}
+
+.dropdown-columns-wrap {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 16px;
+  width: 100%;
+  padding-top: 4px;
+}
+
+.dropdown-divider-v {
+  width: 1px;
+  background-color: #eee;
+  height: 100%;
+}
+
+.account-dropdown .dropdown-col {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.account-dropdown .dropdown-col h3 {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin: 0 0 6px 0;
+}
+
+.account-dropdown .dropdown-col a {
+  font-size: 12px;
+  color: #333;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.account-dropdown .dropdown-col a:hover {
+  color: var(--color-orange-light);
+  text-decoration: underline;
+}
+
+.dropdown-logout-btn {
+  background: none;
+  border: none;
+  font-size: 12px;
+  color: var(--color-text-link);
+  text-align: left;
+  padding: 0;
+  cursor: pointer;
+  width: fit-content;
+  margin-top: 4px;
+  font-weight: 500;
+}
+
+.dropdown-logout-btn:hover {
+  color: var(--color-text-link-hover);
+  text-decoration: underline;
+}
+
+/* ── Prime Brand logo overlay ──────────────────────────────── */
+.logo-container {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.logo-prime {
+  font-size: 10px;
+  font-style: italic;
+  color: #00A8E0;
+  font-weight: 800;
+  margin-top: -6px;
+  margin-left: 20px;
+  text-transform: lowercase;
+  letter-spacing: 0.5px;
+  line-height: 1;
+}
+
+/* ── Flag + EN Widget ──────────────────────────────────────── */
+.lang-widget {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 8px;
+  border: 2px solid transparent;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.lang-widget:hover {
+  border-color: white;
+}
+
+.flag-icon {
+  font-size: 16px;
+  line-height: 1;
+}
+
+.lang-text {
+  color: white;
+  font-size: 13px;
+}
+
+.lang-arrow {
+  color: #ccc;
+  font-size: 10px;
+}
+
+/* Language Dropdown styling */
+.lang-dropdown-trigger {
+  position: relative;
+}
+
+.lang-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 250px;
+  background-color: var(--color-white, #ffffff);
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-shadow: var(--shadow-dropdown, 0 4px 16px rgba(0,0,0,0.15));
+  display: none;
+  flex-direction: column;
+  padding: 14px 16px;
+  z-index: 1020;
+  cursor: default;
+  text-align: left;
+}
+
+.lang-dropdown-trigger:hover .lang-dropdown {
+  display: flex;
+}
+
+.lang-dropdown-header {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-bottom: 4px;
+}
+
+.lang-dropdown-header span {
+  display: block;
+}
+
+.lang-options-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 220px;
+  overflow-y: auto;
+  padding-right: 4px;
+  margin: 6px 0;
+}
+
+/* Custom mini scrollbar for language list */
+.lang-options-list::-webkit-scrollbar {
+  width: 4px;
+}
+.lang-options-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+.lang-options-list::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 2px;
+}
+
+.lang-option-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  padding: 6px 8px;
+  border-radius: 4px;
+  transition: background 0.15s ease;
+}
+
+.lang-option-label:hover {
+  background: #f5f5f5;
+}
+
+.lang-radio-input {
+  cursor: pointer;
+  accent-color: var(--color-orange, #FF9900);
+  width: 14px;
+  height: 14px;
+  margin: 0;
+}
+
+.lang-option-text {
+  font-size: 13px;
+  color: var(--color-text-primary, #0F1111);
+  white-space: nowrap;
+}
+
+.lang-native {
+  font-weight: 600;
+}
+
+.lang-dropdown-footer {
+  text-align: center;
+  border-top: 1px solid #eee;
+  padding-top: 8px;
+  margin-top: 4px;
+}
+
+

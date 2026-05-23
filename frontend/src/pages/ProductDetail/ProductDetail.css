@@ -1,0 +1,606 @@
+/* ProductDetail.css — Amazon product detail page layout
+   
+   Desktop: 3-column grid
+     [images 380px] [product info flex-1] [buy box 280px]
+   
+   Mobile: single column stack
+*/
+
+.detail-page {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 20px 16px;
+}
+
+/* Breadcrumb */
+.detail-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+.detail-breadcrumb a { color: var(--color-text-link); }
+.detail-breadcrumb a:hover { color: var(--color-text-link-hover); text-decoration: underline; }
+.detail-breadcrumb span { color: var(--color-text-secondary); }
+
+/* ── 3-column layout ─────────────────────────────────────────── */
+.detail-grid {
+  display: grid;
+  grid-template-columns: 550px 1fr 300px;
+  gap: 24px;
+  align-items: flex-start;
+}
+
+/* ── LEFT: Image Gallery ────────────────────────────────────── */
+.detail-gallery {
+  position: sticky;
+  top: 108px;
+}
+
+/* Flex row: [thumbnails | main-image-outer] */
+.detail-gallery-inner {
+  display: flex;
+  gap: 10px;
+}
+
+/* Vertical thumbnail strip */
+.detail-thumbnails {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 54px;
+  flex-shrink: 0;
+}
+
+.detail-thumb {
+  width: 54px;
+  height: 54px;
+  border: 2px solid var(--color-card-border);
+  border-radius: 4px;
+  overflow: hidden;
+  cursor: pointer;
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  flex-shrink: 0;
+  padding: 0;
+}
+.detail-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 4px;
+}
+.detail-thumb:hover  { border-color: var(--color-orange); box-shadow: 0 0 0 1px var(--color-orange); }
+.detail-thumb.active { border-color: var(--color-orange); box-shadow: 0 0 0 1px var(--color-orange); }
+
+/* Wrapper for main image + floated zoom result */
+.detail-main-img-outer {
+  flex: 1;
+  position: relative;           /* Zoom result panel is positioned relative to this */
+}
+
+/* Main image box — clean white, no border, cursor crosshair when zooming */
+.detail-main-img-wrap {
+  width: 100%;
+  background: white;
+  border: 1px solid var(--color-card-border);
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  position: relative;
+  cursor: crosshair;
+  user-select: none;
+}
+.detail-main-img-wrap.zooming {
+  cursor: crosshair;
+}
+
+.detail-main-img {
+  max-width: 96%;
+  max-height: 96%;
+  object-fit: contain;
+  pointer-events: none;          /* Prevent image from stealing mouse events */
+  display: block;
+}
+
+/* Lens rectangle — tracks cursor, semi-transparent blue tint */
+.detail-zoom-lens {
+  position: absolute;
+  width: 120px;
+  height: 120px;
+  background: rgba(255, 242, 188, 0.45);  /* Amazon uses a yellowish tint */
+  border: 1px solid rgba(200, 170, 0, 0.4);
+  transform: translate(-50%, -50%);       /* Center on cursor */
+  pointer-events: none;
+  z-index: 10;
+  border-radius: 2px;
+}
+
+/* Zoomed result panel — floats to the right of the gallery, overlays centre column */
+.detail-zoom-result {
+  position: absolute;
+  left: calc(100% + 20px);       /* Just to the right of the main image */
+  top: 0;
+  width: 520px;
+  height: 520px;
+  background-color: white;
+  background-repeat: no-repeat;
+  border: 1px solid var(--color-card-border);
+  border-radius: var(--radius-sm);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+  z-index: 100;
+  pointer-events: none;
+}
+
+/* "Roll over image to zoom in" hint */
+.zoom-hint {
+  position: absolute;
+  bottom: 10px;
+  left: 0; right: 0;
+  text-align: center;
+  font-size: 11px;
+  color: var(--color-text-secondary);
+  opacity: 0;
+  transition: opacity 0.2s;
+  pointer-events: none;
+}
+.detail-main-img-wrap:hover .zoom-hint { opacity: 1; }
+
+/* ── CENTER: Product Info ────────────────────────────────────── */
+.detail-info {
+  min-width: 0;
+}
+
+/* Brand row: "Brand: ANNI DESIGNER" in small blue text */
+.detail-brand-row {
+  margin-bottom: 6px;
+}
+.detail-brand-link {
+  font-size: 13px;
+  color: var(--color-text-link);
+  text-decoration: none;
+}
+.detail-brand-link:hover { text-decoration: underline; }
+.detail-brand-name {
+  font-weight: 600;
+}
+
+/* Product title — H1, regular weight like Amazon */
+.detail-title {
+  font-size: 22px;
+  font-weight: 400;
+  line-height: 1.45;
+  color: var(--color-text-primary);
+  margin-bottom: 10px;
+}
+
+/* Rating row with separator and "Search this page" link */
+.detail-rating-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+.detail-rating-sep {
+  color: var(--color-card-border);
+  font-size: 13px;
+}
+.detail-search-page-link {
+  font-size: 13px;
+  color: var(--color-text-link);
+  text-decoration: none;
+}
+.detail-search-page-link:hover { text-decoration: underline; }
+
+/* "X+ bought in past month" — orange pill badge (matches Amazon screenshot) */
+.detail-bought-row {
+  margin-bottom: 10px;
+}
+.detail-bought-pill {
+  display: inline-block;
+  font-size: 13px;
+  color: #6B3A00;                       /* Dark orange text */
+  font-weight: 400;
+  background: #F5CBA7;                  /* Warm peach/orange background */
+  border-radius: var(--radius-pill);
+  padding: 3px 10px;
+}
+
+/* Divider line */
+.detail-divider {
+  border: none;
+  border-top: 1px solid var(--color-card-border);
+  margin: 14px 0;
+}
+
+/* Price block — "-X% ₹Price" row + MRP + You Save */
+.detail-price-block {
+  margin-bottom: 12px;
+}
+
+/* "-86% ₹359" flex row — discount in red, price next to it */
+.detail-price-top-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 4px;
+}
+
+/* Red discount percentage "-86%" */
+.detail-price-discount-pct {
+  font-size: 28px;
+  font-weight: 400;
+  color: #B12704;                       /* Amazon's dark red for discounts */
+  line-height: 1;
+}
+
+/* Price ₹ + whole number */
+.detail-price-main {
+  display: flex;
+  align-items: flex-start;
+  gap: 1px;
+  line-height: 1;
+}
+.detail-price-symbol {
+  font-size: 14px;
+  color: var(--color-text-primary);
+  padding-top: 5px;
+}
+.detail-price-whole {
+  font-size: 34px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+/* Superscript paise "00" */
+.detail-price-paise {
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--color-text-primary);
+  margin-top: 4px;
+  vertical-align: super;
+}
+
+/* M.R.P. strikethrough */
+.detail-price-mrp {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  margin-bottom: 2px;
+}
+.detail-price-mrp s { color: var(--color-text-secondary); }
+
+/* You Save line */
+.detail-price-savings {
+  font-size: 13px;
+  color: #B12704;
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+/* "Inclusive of all taxes" */
+.detail-price-tax {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  margin-bottom: 10px;
+}
+
+/* Prime badge + FREE delivery row */
+.detail-prime-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  margin-bottom: 4px;
+}
+.detail-prime-svg {
+  width: 44px;
+  height: 15px;
+  flex-shrink: 0;
+  display: block;
+}
+.detail-delivery-text { font-size: 13px; color: var(--color-text-primary); }
+
+/* "Or fastest delivery" line */
+.detail-fastest-row {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  margin-bottom: 10px;
+}
+.detail-fastest-row strong { color: var(--color-text-primary); font-weight: 700; }
+
+/* Stock status */
+.detail-stock { font-size: 17px; font-weight: 600; margin-bottom: 8px; }
+.detail-stock.in-stock  { color: #007600; }
+.detail-stock.out-stock { color: var(--color-text-sale); }
+
+/* Low-stock warning */
+.detail-low-stock {
+  font-size: 13px;
+  color: var(--color-text-sale);
+  margin-bottom: 12px;
+}
+
+/* About this item */
+.detail-about {
+  margin-top: 16px;
+}
+.detail-about h3 {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  color: var(--color-text-primary);
+}
+.detail-about ul {
+  list-style: disc;
+  padding-left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.detail-about li {
+  font-size: 14px;
+  color: var(--color-text-primary);
+  line-height: 1.6;
+}
+
+/* Product Information section heading */
+.detail-section-h3 {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  color: var(--color-text-primary);
+}
+
+/* Product info table */
+.detail-info-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+.detail-info-td-label {
+  padding: 8px 16px 8px 0;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  width: 160px;
+  border-bottom: 1px solid var(--color-card-border);
+  vertical-align: top;
+}
+.detail-info-td-value {
+  padding: 8px 0;
+  color: var(--color-text-primary);
+  border-bottom: 1px solid var(--color-card-border);
+}
+
+/* ── RIGHT: Buy Box ───────────────────────────────────────── */
+.detail-buybox {
+  position: sticky;
+  top: 108px;
+  background: white;
+  border: 1px solid #DDD;
+  border-radius: var(--radius-md);
+  padding: 18px;
+  box-shadow: var(--shadow-buybox);
+}
+
+/* Prime logo row above price */
+.buybox-prime-logo-row {
+  margin-bottom: 4px;
+}
+.buybox-prime-svg {
+  width: 44px;
+  height: 15px;
+  display: block;
+}
+
+/* Large price */
+.buybox-price-main {
+  display: flex;
+  align-items: flex-start;
+  gap: 1px;
+  line-height: 1;
+  margin-bottom: 2px;
+}
+.buybox-price-symbol { font-size: 14px; color: var(--color-text-primary); padding-top: 4px; }
+.buybox-price-whole  { font-size: 28px; font-weight: 700; color: var(--color-text-primary); }
+
+/* Superscript paise */
+.buybox-price-paise {
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--color-text-primary);
+  margin-top: 4px;
+  vertical-align: super;
+}
+
+/* MRP + discount in buybox */
+.buybox-price-mrp {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  margin-bottom: 10px;
+}
+.buybox-price-mrp s { color: var(--color-text-secondary); }
+.buybox-price-discount { color: var(--color-text-secondary); }
+
+/* Delivery block */
+.buybox-delivery {
+  font-size: 13px;
+  color: var(--color-text-primary);
+  margin-bottom: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  line-height: 1.5;
+}
+
+.buybox-fastest {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+}
+
+.buybox-location {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+.buybox-pin { color: #C7511F; font-size: 13px; }
+
+/* Stock status */
+.buybox-stock {
+  font-size: 17px;
+  font-weight: 600;
+  color: #007600;                       /* Amazon's green */
+  margin: 10px 0;
+}
+.buybox-stock.oos { color: var(--color-text-sale); font-size: 15px; }
+
+/* Qty selector row */
+.buybox-qty-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+  font-size: 13px;
+}
+.buybox-qty {
+  padding: 6px 10px;
+  border: 1px solid var(--color-card-border);
+  border-radius: var(--radius-sm);
+  background: #F0F2F2;
+  font-size: 13px;
+  cursor: pointer;
+  font-family: var(--font-family);
+  outline: none;
+  min-width: 70px;
+}
+.buybox-qty:focus { border-color: var(--color-orange); }
+
+/* Add to Cart / Buy Now buttons */
+.buybox-btn-cart {
+  width: 100%;
+  padding: 10px;
+  background: var(--color-btn-cart);
+  border: 1px solid #FCD200;
+  border-radius: var(--radius-pill);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  cursor: pointer;
+  margin-bottom: 10px;
+  transition: background 0.15s, transform 0.1s;
+  font-family: var(--font-family);
+}
+.buybox-btn-cart:hover   { background: var(--color-btn-cart-hover); }
+.buybox-btn-cart:active  { transform: scale(0.98); }
+.buybox-btn-cart.added   {
+  background: var(--color-text-green);
+  border-color: var(--color-text-green);
+  color: white;
+}
+
+.buybox-btn-buy {
+  width: 100%;
+  padding: 10px;
+  background: var(--color-btn-buy);
+  border: 1px solid #FF8C00;
+  border-radius: var(--radius-pill);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  cursor: pointer;
+  margin-bottom: 14px;
+  transition: background 0.15s;
+  font-family: var(--font-family);
+}
+.buybox-btn-buy:hover { background: var(--color-btn-buy-hover); }
+
+/* Ships from / Sold by */
+.buybox-meta {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.buybox-meta span { color: var(--color-text-link); }
+
+/* Add to Wishlist */
+.buybox-wishlist {
+  width: 100%;
+  padding: 8px;
+  background: white;
+  border: 1px solid var(--color-card-border);
+  border-radius: var(--radius-pill);
+  font-size: 13px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background 0.15s;
+  font-family: var(--font-family);
+  color: var(--color-text-primary);
+}
+.buybox-wishlist:hover { background: #f7f7f7; }
+
+/* ── Also Viewed row (below 3-col) ──────────────────────────── */
+.detail-also-viewed {
+  margin-top: 32px;
+  padding-top: 20px;
+  border-top: 1px solid var(--color-card-border);
+}
+.detail-also-viewed h2 {
+  font-size: 21px;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+.detail-also-row {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+}
+
+/* ── Loading skeleton ────────────────────────────────────────── */
+.detail-skeleton {
+  display: grid;
+  grid-template-columns: 550px 1fr 300px;
+  gap: 24px;
+  padding: 20px 16px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+.skel-gallery { aspect-ratio: 1/1; }
+.skel-line    { height: 16px; margin-bottom: 12px; border-radius: 4px; }
+.skel-title   { width: 80%; height: 28px; }
+.skel-price   { width: 40%; height: 40px; }
+
+/* ── Responsive ──────────────────────────────────────────────── */
+@media (max-width: 1250px) {
+  .detail-grid               { grid-template-columns: 460px 1fr 280px; }
+}
+
+@media (max-width: 1100px) {
+  .detail-grid               { grid-template-columns: 380px 1fr 260px; }
+  .detail-also-row           { grid-template-columns: repeat(4, 1fr); }
+}
+
+@media (max-width: 900px) {
+  .detail-grid               { grid-template-columns: 1fr; }
+  .detail-gallery            { position: static; max-width: 500px; margin: 0 auto; }
+  .detail-buybox             { position: static; }
+  .detail-skeleton           { grid-template-columns: 1fr; }
+  .detail-also-row           { grid-template-columns: repeat(3, 1fr); }
+}
+
+@media (max-width: 600px) {
+  .detail-title              { font-size: 18px; }
+  .detail-price-whole        { font-size: 26px; }
+  .detail-also-row           { grid-template-columns: repeat(2, 1fr); }
+}
