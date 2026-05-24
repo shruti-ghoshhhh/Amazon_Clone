@@ -103,6 +103,19 @@ export default function Checkout() {
     setPlacing(true);
     setError('');
 
+    // If order total exceeds Razorpay limits, default to COD
+    if (total > 500000) {
+      try {
+        const { data } = await api.post('/orders', { address_id: selectedAddr });
+        await fetchCart();
+        navigate(`/order-confirmation/${data.data.id}`);
+      } catch (err) {
+        setError(err.response?.data?.message || 'Failed to place order.');
+        setPlacing(false);
+      }
+      return;
+    }
+
     // Load Razorpay script dynamically
     const resScript = await loadRazorpayScript();
     if (!resScript) {
@@ -334,10 +347,16 @@ export default function Checkout() {
             disabled={placing || !selectedAddr}
             aria-label="Place your order"
           >
-            {placing ? 'Placing order…' : 'Place your order'}
+            {placing ? 'Placing order…' : (total > 500000 ? 'Place Order (Cash on Delivery)' : 'Place your order')}
           </button>
 
-          <p className="checkout-secure">🔒 Secure checkout — SSL encrypted</p>
+          {total > 500000 ? (
+            <p className="checkout-secure" style={{ color: '#d9534f', marginTop: '12px' }}>
+              Amount exceeds maximum for online payment. This order will be placed as Cash on Delivery.
+            </p>
+          ) : (
+            <p className="checkout-secure">🔒 Secure checkout — SSL encrypted</p>
+          )}
         </div>
 
       </div>

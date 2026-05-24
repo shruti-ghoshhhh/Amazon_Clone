@@ -257,6 +257,11 @@ export const createRazorpayOrder = catchAsync(async (req, res) => {
   const shipping_fee = subtotal > 499 ? 0 : 40;
   const total = subtotal + shipping_fee;
 
+  // 4.1. Prevent Razorpay checkout for amounts > 500000
+  if (total > 500000) {
+    throw new AppError('Amount exceeds maximum allowed for online payment. Please use Cash on Delivery.', 400);
+  }
+
   // 5. Initialize Razorpay and create order
   const razorpay = getRazorpayInstance();
   const options = {
